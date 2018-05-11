@@ -1,6 +1,7 @@
 ///////////////// Important Game Variables /////////////////
 var player_1 = null;
 var player_2 = null;
+var ball = null;
 var wrapping = false;
 var game_width = 1000;
 var game_height = 540;
@@ -27,21 +28,25 @@ var myGameArea = {
 
 function startGame() {
 	// initialize player 1
-	var p1_width = 40;
-	var p1_height = 40;
+	var p1_width = 60;
+	var p1_height = 20;
 	var p1_mass = 5;
-	var p1_start_pos = random_XY(p1_width, p1_height);
-	player_1 = new component(p1_start_pos.x, p1_start_pos.y, p1_mass, p1_width, p1_height, "player", "red");
-	player_1.sprite = "bulbasaur";
+	// var p1_start_pos = random_XY(p1_width, p1_height);
+	player_1 = new component(game_width/2, game_height-25, p1_mass, p1_width, p1_height, "player", "white");
+	// player_1.sprite = "bulbasaur";
 	
 	// initialize player 2
-	var p2_width = 40;
-	var p2_height = 40;
+	var p2_width = 60;
+	var p2_height = 20;
 	var p2_mass = 5;
-	var p2_start_pos = random_XY(p2_width, p2_height);
-	player_2 = new component(p2_start_pos.x, p2_start_pos.y, p2_mass, p2_width, p2_height, "player", "blue");
-	player_2.sprite = "charmander";
+	// var p2_start_pos = random_XY(p2_width, p2_height);
+	player_2 = new component(game_width/2, 25, p2_mass, p2_width, p2_height, "player", "white");
+	// player_2.sprite = "charmander";
 
+	// initialize ball
+	ball = new component(game_width/2, game_height/2, 5, 20, 20, "ball", "yellow");
+	ball.dy = -5;
+	
 	myGameArea.start();
 }
 
@@ -97,16 +102,40 @@ function component(x, y, m, w, h, type, color) {
 					((this.x + (this.width)) < otherobj.x) || 
 					( this.x > (otherobj.x + (otherobj.width))));
 	}
+	
+	this.hit_side = function() {
+		return ((this.x + this.width) >= game_width || this.x <= 0);
+	}
 }
 
 // this is where we implement the rules of the game
 function game_loop() {
 	
 	// do rules (check for collisions, handle scores, etc.)
+	// collisions with side wall 
+	if (ball.hit_side())
+		ball.dx *= -1;
+	if (player_1.hit_side())
+		player_1.dx *= -1;
+	if (player_2.hit_side())
+		player_2.dx *= -1;
 	
+	// collisions with ball and paddle
+	if (ball.crash_with(player_1)) {
+		ball.dx = (ball.dx * -1) + player_1.dx;
+		ball.dy *= -1;
+	}
+	if (ball.crash_with(player_2)){
+		ball.dx = (ball.dx * -1) + player_2.dx;
+		ball.dy *= -1;
+	}
 	
-	// do math (apply wall/wrapping, gravity, & friction here)
-	
+	// do math (apply  gravity/friction here)
+	// friction
+	player_1.dx *= friction;
+	player_2.dx *= friction;
+	// ball.dx *= friction;
+	// ball.dy *= friction;
 	
 	// update stuff
 	myGameArea.clear();
@@ -114,10 +143,12 @@ function game_loop() {
 	
 	player_1.update_position();
 	player_2.update_position();
+	ball.update_position();
 	
 	// draw newly updated stuff
 	player_1.draw();
 	player_2.draw();
+	ball.draw();
 
 }
 
@@ -135,15 +166,15 @@ function handle_keyPress(event) {
 	if (key_value == 97 /*a - Left */) {
 		player_1.accelerate(speed * -1, 0);
 	}
-	else if (key_value == 100 /*d - Right*/) {
+	if (key_value == 100 /*d - Right*/) {
 		player_1.accelerate(speed, 0);
 	}
 	
 	// Player 2 (ijkl)
-	else if (key_value == 106 /*j - Left */) {
+	if (key_value == 106 /*j - Left */) {
 		player_2.accelerate(speed * -1, 0);
 	}
-	else if (key_value == 108 /*l - Right*/) {
+	if (key_value == 108 /*l - Right*/) {
 		player_2.accelerate(speed, 0);
 	}
 	
