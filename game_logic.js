@@ -132,28 +132,17 @@ function handle_keyPress(event) {
 	var key_value = event.which || event.keyCode;
 	
 	// Player 1 (wasd)
-	if (key_value == 119 /*w - Up */) {
-		player_1.accelerate(0, speed * -1);
-	}
 	else if (key_value == 97 /*a - Left */) {
 		player_1.accelerate(speed * -1, 0);
 	}
-	else if (key_value == 115 /*s - Down*/) {
-		player_1.accelerate(0, speed);
 	}
 	else if (key_value == 100 /*d - Right*/) {
 		player_1.accelerate(speed, 0);
 	}
 	
 	// Player 2 (ijkl)
-	else if (key_value == 105 /*i - Up */) {
-		player_2.accelerate(0, speed * -1);
-	}
 	else if (key_value == 106 /*j - Left */) {
 		player_2.accelerate(speed * -1, 0);
-	}
-	else if (key_value == 107 /*k - Down*/) {
-		player_2.accelerate(0, speed);
 	}
 	else if (key_value == 108 /*l - Right*/) {
 		player_2.accelerate(speed, 0);
