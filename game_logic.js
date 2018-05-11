@@ -132,9 +132,8 @@ function handle_keyPress(event) {
 	var key_value = event.which || event.keyCode;
 	
 	// Player 1 (wasd)
-	else if (key_value == 97 /*a - Left */) {
+	if (key_value == 97 /*a - Left */) {
 		player_1.accelerate(speed * -1, 0);
-	}
 	}
 	else if (key_value == 100 /*d - Right*/) {
 		player_1.accelerate(speed, 0);
