@@ -8,6 +8,13 @@ var game_height = 540;
 var friction = 0.95;
 var gravity = 1.0;
 var speed = 5.0;
+var level_1 = [
+	[0,1,0,1,0],
+	[1,0,1,0,1],
+	[0,1,0,1,0],
+	[1,0,1,0,1],
+	[0,1,0,1,0]];
+var bricks = [[],[],[],[],[]];
 
 
 ///////////////// Core Game Functions /////////////////
@@ -47,6 +54,15 @@ function startGame() {
 	ball = new component(game_width/2, game_height/2, 5, 20, 20, "ball", "yellow");
 	ball.dy = -5;
 	
+	// initialize bricks
+	for (i = 0; i < level_1.length; i++)
+		for (j = 0; j < level_1[i].length; j++) {
+			if (level_1[i][j]) {
+				temp_brick = new component(10+i*20, 10+j*20, 5, 20, 20, "brick", "blue");
+				bricks[i].push(temp_brick);
+			}
+		}
+	
 	myGameArea.start();
 }
 
@@ -66,7 +82,7 @@ function component(x, y, m, w, h, type, color) {
 	this.sprite = null;
 	this.name = null;
 	this.score = 0;
-	this.health = 0;
+	this.health = 1;
 	this.type = type;
 	
 	this.update_position = function() {
@@ -120,7 +136,6 @@ function component(x, y, m, w, h, type, color) {
 // this is where we implement the rules of the game
 function game_loop() {
 	
-	// do rules (check for collisions, handle scores, etc.)
 	// collisions with side wall 
 	if (ball.hit_side()) {
 		ball.dx *= -1;
@@ -142,12 +157,20 @@ function game_loop() {
 		ball.dy *= -1;
 	}
 	
-	// do math (apply  gravity/friction here)
-	// friction
+	// collisions of ball with bricks
+	for (i = 0; i < bricks.length; i++) {
+		for (j = 0; j < bricks[i].length; j++) {
+			if ( bricks[i][j].health > 0 && ball.crash_with(bricks[i][j]) ) {
+				ball.dx *= -1;
+				ball.dy *= -1;
+				bricks[i][j].health--;
+			}
+		}
+	}
+	
+	// apply friction
 	player_1.dx *= friction;
 	player_2.dx *= friction;
-	// ball.dx *= friction;
-	// ball.dy *= friction;
 	
 	// update stuff
 	myGameArea.clear();
@@ -161,6 +184,10 @@ function game_loop() {
 	player_1.draw();
 	player_2.draw();
 	ball.draw();
+	for (i = 0; i < bricks.length; i++)
+		for (j = 0; j < bricks[i].length; j++)
+			if (bricks[i][j].health > 0)
+				bricks[i][j].draw();
 
 }
 
@@ -179,15 +206,15 @@ function handle_keyPress(event) {
 	if (key_value == 65 /*a - Left */) {
 		player_1.accelerate(speed * -1, 0);
 	}
-	if (key_value == 68 /*d - Right*/) {
+	else if (key_value == 68 /*d - Right*/) {
 		player_1.accelerate(speed, 0);
 	}
 	
 	// Player 2 (ijkl)
-	if (key_value == 74 /*j - Left */) {
+	else if (key_value == 74 /*j - Left */) {
 		player_2.accelerate(speed * -1, 0);
 	}
-	if (key_value == 76 /*l - Right*/) {
+	else if (key_value == 76 /*l - Right*/) {
 		player_2.accelerate(speed, 0);
 	}
 	
