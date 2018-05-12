@@ -53,14 +53,14 @@ function startGame() {
 	// player_2.sprite = "charmander";
 
 	// initialize ball
-	ball = new component(game_width/2, game_height/2, 5, 45, 36, "ball", "yellow");
+	ball = new component(game_width/2, game_height/2, 5, 20, 20, "ball", "white");
 	ball.dy = -5;
 
 	// initialize bricks
 	for (i = 0; i < level_1.length; i++) {
 		for (j = 0; j < level_1[i].length; j++) {
 			if (level_1[i][j]) {
-				temp_brick = new component(bx, by, 5, 20, 20, "brick", "blue");
+				temp_brick = new component(bx, by, 5, 45, 36, "brick", "white");
 				bricks[i].push(temp_brick);
 			}
 			bx += 50;
