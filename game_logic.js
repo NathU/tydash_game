@@ -36,6 +36,7 @@ var myGameArea = {
 }
 
 function startGame() {
+		ball.dy = 0;
 	// initialize player 1
 	var p1_width = 60;
 	var p1_height = 20;
@@ -54,7 +55,7 @@ function startGame() {
 
 	// initialize ball
 	ball = new component(game_width/2, game_height/2, 5, 20, 20, "ball", "white");
-
+	ball.dy = -5;
 
 	// initialize bricks
 	for (i = 0; i < level_1.length; i++) {
