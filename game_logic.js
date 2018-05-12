@@ -73,6 +73,7 @@ function startGame() {
 // component = anything that's drawn on the canvas and/or simply the objects in the game.
 function component(x, y, m, w, h, type, color) {
 	// physics
+	ball.dx = -5;
 	this.x = x;
 	this.y= y;
 	this.mass= m;
