@@ -54,7 +54,7 @@ function startGame() {
 
 	// initialize ball
 	ball = new component(game_width/2, game_height/2, 5, 20, 20, "ball", "white");
-	ball.dy = -5;
+
 
 	// initialize bricks
 	for (i = 0; i < level_1.length; i++) {
@@ -67,7 +67,6 @@ function startGame() {
 		}
 		by += 40;
 	}
-	bricks.draw();
 	myGameArea.start();
 }
 
