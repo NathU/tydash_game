@@ -57,14 +57,16 @@ function startGame() {
 	ball.dy = -5;
 
 	// initialize bricks
-	for (i = 0; i < level_1.length; i++)
+	for (i = 0; i < level_1.length; i++) {
 		for (j = 0; j < level_1[i].length; j++) {
 			if (level_1[i][j]) {
-				temp_brick = new component(10+i*20, 10+j*20, 5, 20, 20, "brick", "blue");
+				temp_brick = new component(bx, by, 5, 20, 20, "brick", "blue");
 				bricks[i].push(temp_brick);
 			}
+			bx += 50;
 		}
-
+		by += 40;
+	}
 	myGameArea.start();
 }
 
