@@ -17,6 +17,7 @@ var level_1 = [
 var bricks = [[],[],[],[],[]];
 var bx = 1;
 var by = 135;
+ball.dy = -5;
 
 
 ///////////////// Core Game Functions /////////////////
@@ -54,7 +55,7 @@ function startGame() {
 
 	// initialize ball
 	ball = new component(game_width/2, game_height/2, 5, 20, 20, "ball", "white");
-	ball.dy = -5;
+
 
 	// initialize bricks
 	for (i = 0; i < level_1.length; i++) {
