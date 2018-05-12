@@ -7,7 +7,7 @@ var game_width = 1000;
 var game_height = 540;
 var friction = 0.95;
 var gravity = 1.0;
-var speed = 2.0;
+var speed = 5.0;
 
 
 ///////////////// Core Game Functions /////////////////
@@ -104,8 +104,17 @@ function component(x, y, m, w, h, type, color) {
 	}
 	
 	this.hit_side = function() {
-		return ((this.x + this.width) >= game_width || this.x <= 0);
+		if ((this.x + this.width) >= game_width) {
+			this.x = game_width - this.width - 1;
+			return true;
+		}
+		if (this.x <= 0) {
+			this.x = 1;
+			return true;
+		}
+		return false;
 	}
+	this.bounce = function(){}
 }
 
 // this is where we implement the rules of the game
@@ -113,12 +122,15 @@ function game_loop() {
 	
 	// do rules (check for collisions, handle scores, etc.)
 	// collisions with side wall 
-	if (ball.hit_side())
+	if (ball.hit_side()) {
 		ball.dx *= -1;
-	if (player_1.hit_side())
+	}
+	if (player_1.hit_side()) {
 		player_1.dx *= -1;
-	if (player_2.hit_side())
+	}
+	if (player_2.hit_side()) {
 		player_2.dx *= -1;
+	}
 	
 	// collisions with ball and paddle
 	if (ball.crash_with(player_1)) {
@@ -161,20 +173,21 @@ function handle_keyPress(event) {
 	*/
 	
 	var key_value = event.which || event.keyCode;
+	// console.log(key_value);
 	
 	// Player 1 (wasd)
-	if (key_value == 97 /*a - Left */) {
+	if (key_value == 65 /*a - Left */) {
 		player_1.accelerate(speed * -1, 0);
 	}
-	if (key_value == 100 /*d - Right*/) {
+	if (key_value == 68 /*d - Right*/) {
 		player_1.accelerate(speed, 0);
 	}
 	
 	// Player 2 (ijkl)
-	if (key_value == 106 /*j - Left */) {
+	if (key_value == 74 /*j - Left */) {
 		player_2.accelerate(speed * -1, 0);
 	}
-	if (key_value == 108 /*l - Right*/) {
+	if (key_value == 76 /*l - Right*/) {
 		player_2.accelerate(speed, 0);
 	}
 	
