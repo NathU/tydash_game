@@ -17,7 +17,6 @@ var level_1 = [
 var bricks = [[],[],[],[],[]];
 var bx = 1;
 var by = 135;
-ball.dy = -5;
 
 
 ///////////////// Core Game Functions /////////////////
