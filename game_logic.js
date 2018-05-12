@@ -8,7 +8,6 @@ var game_height = 540;
 var friction = 0.95;
 var gravity = 1.0;
 var speed = 5.0;
-var ball.dy = -5;
 var level_1 = [
 	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -55,7 +54,7 @@ function startGame() {
 
 	// initialize ball
 	ball = new component(game_width/2, game_height/2, 5, 20, 20, "ball", "white");
-
+	var ball.dy = -5;
 
 	// initialize bricks
 	for (i = 0; i < level_1.length; i++) {
