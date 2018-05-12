@@ -9,12 +9,14 @@ var friction = 0.95;
 var gravity = 1.0;
 var speed = 5.0;
 var level_1 = [
-	[0,1,0,1,0],
-	[1,0,1,0,1],
-	[0,1,0,1,0],
-	[1,0,1,0,1],
-	[0,1,0,1,0]];
+	[0,0,0,0,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0,0,0,0]];
 var bricks = [[],[],[],[],[]];
+var bx = 1;
+var by = 135;
 
 
 ///////////////// Core Game Functions /////////////////
@@ -41,7 +43,7 @@ function startGame() {
 	// var p1_start_pos = random_XY(p1_width, p1_height);
 	player_1 = new component(game_width/2, game_height-25, p1_mass, p1_width, p1_height, "player", "white");
 	// player_1.sprite = "bulbasaur";
-	
+
 	// initialize player 2
 	var p2_width = 60;
 	var p2_height = 20;
@@ -51,9 +53,9 @@ function startGame() {
 	// player_2.sprite = "charmander";
 
 	// initialize ball
-	ball = new component(game_width/2, game_height/2, 5, 20, 20, "ball", "yellow");
+	ball = new component(game_width/2, game_height/2, 5, 45, 36, "ball", "yellow");
 	ball.dy = -5;
-	
+
 	// initialize bricks
 	for (i = 0; i < level_1.length; i++)
 		for (j = 0; j < level_1[i].length; j++) {
@@ -62,7 +64,7 @@ function startGame() {
 				bricks[i].push(temp_brick);
 			}
 		}
-	
+
 	myGameArea.start();
 }
 
@@ -84,17 +86,17 @@ function component(x, y, m, w, h, type, color) {
 	this.score = 0;
 	this.health = 1;
 	this.type = type;
-	
+
 	this.update_position = function() {
 		this.x += this.dx;
 		this.y += this.dy;
 	}
-	
+
 	this.accelerate = function(dx, dy) {
 		this.dx += dx;
 		this.dy += dy;
 	}
-	
+
 	this.draw = function() {
 		ctx = myGameArea.context;
 		if (this.type == "text") {
@@ -111,14 +113,14 @@ function component(x, y, m, w, h, type, color) {
 			ctx.fillRect(this.x, this.y, this.width, this.height);
 		}
 	}
-	
+
 	this.crash_with = function(otherobj) {
-		return !(((this.y + (this.height)) < otherobj.y) || 
-					( this.y > (otherobj.y + (otherobj.height))) || 
-					((this.x + (this.width)) < otherobj.x) || 
+		return !(((this.y + (this.height)) < otherobj.y) ||
+					( this.y > (otherobj.y + (otherobj.height))) ||
+					((this.x + (this.width)) < otherobj.x) ||
 					( this.x > (otherobj.x + (otherobj.width))));
 	}
-	
+
 	this.hit_side = function() {
 		if ((this.x + this.width) >= game_width) {
 			this.x = game_width - this.width - 1;
@@ -135,8 +137,8 @@ function component(x, y, m, w, h, type, color) {
 
 // this is where we implement the rules of the game
 function game_loop() {
-	
-	// collisions with side wall 
+
+	// collisions with side wall
 	if (ball.hit_side()) {
 		ball.dx *= -1;
 	}
@@ -146,7 +148,7 @@ function game_loop() {
 	if (player_2.hit_side()) {
 		player_2.dx *= -1;
 	}
-	
+
 	// collisions with ball and paddle
 	if (ball.crash_with(player_1)) {
 		ball.dx = (ball.dx * -1) + player_1.dx;
@@ -156,7 +158,7 @@ function game_loop() {
 		ball.dx = (ball.dx * -1) + player_2.dx;
 		ball.dy *= -1;
 	}
-	
+
 	// collisions of ball with bricks
 	for (i = 0; i < bricks.length; i++) {
 		for (j = 0; j < bricks[i].length; j++) {
@@ -167,19 +169,19 @@ function game_loop() {
 			}
 		}
 	}
-	
+
 	// apply friction
 	player_1.dx *= friction;
 	player_2.dx *= friction;
-	
+
 	// update stuff
 	myGameArea.clear();
 	myGameArea.frameNo += 1;
-	
+
 	player_1.update_position();
 	player_2.update_position();
 	ball.update_position();
-	
+
 	// draw newly updated stuff
 	player_1.draw();
 	player_2.draw();
@@ -192,16 +194,16 @@ function game_loop() {
 }
 
 function handle_keyPress(event) {
-	/* 
-		In this example, we use a cross-browser solution, because the keyCode property does not 
+	/*
+		In this example, we use a cross-browser solution, because the keyCode property does not
 		work on the onkeypress event in Firefox. However, the which property does.
-		Explanation of the first line in the function below: if the browser supports event.which, 
-		then use event.which, otherwise use event.keyCode 
+		Explanation of the first line in the function below: if the browser supports event.which,
+		then use event.which, otherwise use event.keyCode
 	*/
-	
+
 	var key_value = event.which || event.keyCode;
 	// console.log(key_value);
-	
+
 	// Player 1 (wasd)
 	if (key_value == 65 /*a - Left */) {
 		player_1.accelerate(speed * -1, 0);
@@ -209,7 +211,7 @@ function handle_keyPress(event) {
 	else if (key_value == 68 /*d - Right*/) {
 		player_1.accelerate(speed, 0);
 	}
-	
+
 	// Player 2 (ijkl)
 	else if (key_value == 74 /*j - Left */) {
 		player_2.accelerate(speed * -1, 0);
@@ -217,13 +219,13 @@ function handle_keyPress(event) {
 	else if (key_value == 76 /*l - Right*/) {
 		player_2.accelerate(speed, 0);
 	}
-	
+
 }
 
 
 
 //////////////// Helper Functions //////////////////
-function random_XY(object_width, object_height) { 
+function random_XY(object_width, object_height) {
 	var coordinates = {
 		x : Math.floor(Math.random() * (game_width - object_width)),
 		y : Math.floor(Math.random() * (game_height - object_height))
